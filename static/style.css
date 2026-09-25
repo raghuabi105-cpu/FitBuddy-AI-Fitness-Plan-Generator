@@ -1,0 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f7f5;
+    text-align: center;
+    padding: 30px;
+}
+
+h1 {
+    color: #2e7d32;
+}
+
+form {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: auto;
+}
+
+input,
+select,
+button {
+    padding: 10px;
+    margin: 8px;
+}
+
+button {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

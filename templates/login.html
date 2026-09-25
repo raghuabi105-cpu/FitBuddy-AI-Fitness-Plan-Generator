@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FitBuddy Login</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #d4fc79, #96e6a1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-box {
+            background: white;
+            padding: 35px 30px;
+            width: 350px;
+            border-radius: 18px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 35px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+
+        h3 {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            position: relative;
+            margin: 12px 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2e7d32;
+        }
+
+        .password-input {
+            padding-right: 70px;
+        }
+
+        .show-password {
+            position: absolute;
+            right: 10px;
+            top: 13px;
+            color: #2e7d32;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 15px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #1b5e20;
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .register-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .register-link a {
+            color: #2e7d32;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-box">
+
+        <div class="logo">💪</div>
+
+        <h1>FitBuddy</h1>
+        <h3>Welcome Back! Login</h3>
+
+        <form id="loginForm">
+
+            <div class="input-group">
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter Email"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <input
+                    type="password"
+                    id="password"
+                    class="password-input"
+                    placeholder="Enter Password"
+                    minlength="6"
+                    required
+                >
+
+                <span
+                    class="show-password"
+                    onclick="togglePassword()"
+                >
+                    Show
+                </span>
+            </div>
+
+            <button type="submit" id="loginButton">
+                Login
+            </button>
+
+        </form>
+
+        <p id="message"></p>
+
+        <div class="register-link">
+            Don't have an account?
+            <a href="/register-page">Register Now</a>
+        </div>
+
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const showPassword = document.querySelector(".show-password");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                showPassword.innerText = "Hide";
+            } else {
+                passwordInput.type = "password";
+                showPassword.innerText = "Show";
+            }
+        }
+
+        document.getElementById("loginForm").addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+                const email = document.getElementById("email").value.trim();
+                const password = document.getElementById("password").value.trim();
+
+                const message = document.getElementById("message");
+                const loginButton = document.getElementById("loginButton");
+
+                message.innerText = "";
+                loginButton.disabled = true;
+                loginButton.innerText = "Logging in...";
+
+                const formData = new FormData();
+
+                formData.append("email", email);
+                formData.append("password", password);
+
+                try {
+                    const response = await fetch("/login", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        message.style.color = "green";
+                        message.innerText =
+                            "Login successful! Welcome " + result.user.username;
+
+                        setTimeout(function() {
+                            window.location.href = "/";
+                        }, 1500);
+
+                    } else {
+                        message.style.color = "red";
+                        message.innerText = result.message;
+                    }
+
+                } catch (error) {
+                    message.style.color = "red";
+                    message.innerText =
+                        "Something went wrong. Please try again.";
+                }
+
+                loginButton.disabled = false;
+                loginButton.innerText = "Login";
+            }
+        );
+    </script>
+
+</body>
+</html>
